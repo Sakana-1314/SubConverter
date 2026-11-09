@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.wrangler/
+
+# Test output
+coverage/
+*.lcov
+
+# Local secrets / vars
+.dev.vars
+.dev.vars.*
+
+# User's real subscription and any generated config containing credentials
+.private/
+out/
+
+# Agent / workflow local state
+.zcode/
+
+# Local acceptance binaries (keep tools/mihomo/source.json)
+tools/mihomo/*.exe
+tools/mihomo/*.zip
+tools/mihomo/*.mmdb
+tools/mihomo/*.metadb
+tools/mihomo/*.dat
+
+# Logs and editor/OS noise
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
