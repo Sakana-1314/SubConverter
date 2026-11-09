@@ -1,0 +1,28 @@
+{
+  "name": "subconverter-worker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Subscription converter for mihomo/Clash running on Cloudflare Workers",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "build": "wrangler deploy --dry-run --outdir=dist",
+    "acceptance": "tsx scripts/acceptance.ts"
+  },
+  "dependencies": {
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261109.1",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0",
+    "wrangler": "^4.158.0"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

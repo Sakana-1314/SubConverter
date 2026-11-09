@@ -1,0 +1,40 @@
+# Cloudflare Workers configuration.
+# Contract source: docs/ARCHITECTURE.md §2.1 and §2.2.
+# All vars are strings because Workers environment variables have no numeric type.
+
+name = "subconverter-worker"
+main = "src/index.ts"
+compatibility_date = "2026-11-09"
+compatibility_flags = ["global_fetch_strictly_public"]
+workers_dev = true
+
+[observability]
+enabled = true
+head_sampling_rate = 1
+
+[cache]
+enabled = true
+
+[limits]
+cpu_ms = 5000
+
+[vars]
+UPSTREAM_TIMEOUT_MS = "20000"
+REQUEST_DEADLINE_MS = "30000"
+PER_HOP_TIMEOUT_MS = "10000"
+MAX_UPSTREAM_BYTES = "8388608"
+MAX_TOTAL_UPSTREAM_BYTES = "16777216"
+MAX_INLINE_BYTES = "8192"
+MAX_INLINE_SOURCE_CHARS = "12000"
+MAX_NODES = "10000"
+MAX_RULES = "50000"
+MAX_GROUPS = "128"
+MAX_REDIRECTS = "3"
+ALLOW_HTTP_UPSTREAM = "false"
+UPSTREAM_ALLOWED_PORTS = "80,443"
+PUBLIC_SUBSCRIPTION_CACHE = "false"
+SUBSCRIPTION_CACHE_TTL = "60"
+RULESET_CACHE_TTL = "300"
+PUBLIC_ORIGIN = ""
+ENVIRONMENT = "production"
+ALLOW_TEST_UPSTREAM_HOSTS = ""

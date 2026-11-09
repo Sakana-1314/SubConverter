@@ -1,0 +1,12 @@
+# Surge/Clash text ruleset fixture (rules owner)
+# Comments and blank lines must be skipped.
+
+DOMAIN,example.com,PROXY
+DOMAIN-SUFFIX,example.org
+IP-CIDR,1.2.3.0/24,no-resolve
+IP-CIDR6,2001:db8::/32
+DOMAIN-REGEX,^ads?[0-9]*\.example\.com$,PROXY
+AND,((DOMAIN,a.com),(NETWORK,tcp)),PROXY
+DOMAIN,source-target.example.com,LegacyPolicy
+GEOIP,CN,DIRECT
+FINAL,PROXY
