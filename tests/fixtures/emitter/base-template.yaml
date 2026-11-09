@@ -1,0 +1,37 @@
+# Emitter test template (SPEC §7.1 / AC-16).
+# Contains allowed keys, denied keys and generator-owned core keys.
+mixed-port: 7891
+allow-lan: true
+mode: global
+log-level: warning
+ipv6: false
+dns:
+  enable: true
+  nameserver:
+    - https://9.9.9.9/dns-query
+  fallback:
+    - https://1.1.1.1/dns-query
+tun:
+  enable: true
+  stack: system
+profile:
+  store-selected: true
+script:
+  code: |
+    def main(ctx, metadata):
+      return metadata
+proxies:
+  - {name: ignored, type: ss, server: 1.1.1.1, port: 443, cipher: aes-256-gcm, password: x}
+proxy-groups:
+  - {name: IGNORED, type: select, proxies: [DIRECT]}
+rules:
+  - DOMAIN-SUFFIX,ignored.example,PROXY
+rule-providers:
+  ignored-rs:
+    type: http
+    behavior: domain
+    format: yaml
+    url: https://example.com/getruleset?type=3
+    path: ./ignored.yaml
+    interval: 86400
+unknown-option: true

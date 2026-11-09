@@ -1,0 +1,73 @@
+# Clash / mihomo input sample for the links unit tests.
+proxies:
+  - name: "ss-clash"
+    type: ss
+    server: 1.2.3.4
+    port: 8388
+    cipher: aes-256-gcm
+    password: "ss-pass"
+    udp: true
+  - name: ssr-clash
+    type: ssr
+    server: 5.6.7.8
+    port: 8389
+    cipher: none
+    password: ssr-pass
+    protocol: origin
+    protocol-param: ""
+    obfs: plain
+    obfs-param: ""
+  - name: vmess-clash
+    type: vmess
+    server: vm.example.com
+    port: 443
+    uuid: 11111111-2222-3333-4444-555555555555
+    alterId: 0
+    cipher: auto
+    tls: true
+    servername: vm.example.com
+    network: ws
+    ws-opts:
+      path: /ws
+      headers:
+        Host: cdn.example.com
+  - name: trojan-clash
+    type: trojan
+    server: tj.example.com
+    port: 443
+    password: tj-pass
+    sni: tj.example.com
+    alpn: [h2, http/1.1]
+    network: grpc
+    grpc-opts:
+      grpc-service-name: gun
+    skip-cert-verify: true
+  - name: vless-clash
+    type: vless
+    server: vl.example.com
+    port: 443
+    uuid: aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee
+    tls: true
+    servername: vl.example.com
+    network: tcp
+    flow: xtls-rprx-vision
+    reality-opts:
+      public-key: PUBKEY
+      short-id: abcd
+  - name: socks-clash
+    type: socks5
+    server: 9.9.9.9
+    port: 1080
+  - name: ss-extra-field
+    type: ss
+    server: 1.2.3.5
+    port: 8388
+    cipher: aes-128-gcm
+    password: x
+    some-future-field: y
+proxy-groups:
+  - name: PROXY
+    type: select
+    proxies: [ss-clash, DIRECT]
+rules:
+  - "MATCH,PROXY"

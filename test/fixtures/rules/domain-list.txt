@@ -1,0 +1,8 @@
+# TOTAL: 6
+# A bare domain list with v2fly-style prefixes.
+example.com
+full:exact.example.com
+domain:suffix.example.com
+keyword:ads
+regexp:^track[0-9]+\.example\.com$
+include:another-list.txt

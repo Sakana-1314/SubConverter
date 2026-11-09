@@ -1,0 +1,6 @@
+# Self-contained sample URIs for the links unit tests.
+ss://YWVzLTI1Ni1nY206c3MtcGFzcw@1.2.3.4:8388#SS%20Node
+ssr://c3NyLmV4YW1wbGUuY29tOjgzODg6YXV0aF9jaGFpbl9hOmFlcy0yNTYtY2ZiOmh0dHBfc2ltcGxlOmMzTnlMWEJoYzNNLz9yZW1hcmtzPVUxTlNJRTV2WkdVJm9iZnNwYXJhbT1kM2QzTG1WNFlXMXdiR1V1WTI5dCZwcm90b3BhcmFtPU16SQ
+vmess://eyJ2IjoiMiIsInBzIjoiVk1lc3MgV1MiLCJhZGQiOiJ2bS5leGFtcGxlLmNvbSIsInBvcnQiOiI0NDMiLCJpZCI6IjExMTExMTExLTIyMjItMzMzMy00NDQ0LTU1NTU1NTU1NTU1NSIsImFpZCI6IjAiLCJuZXQiOiJ3cyIsInR5cGUiOiJub25lIiwiaG9zdCI6ImNkbi5leGFtcGxlLmNvbSIsInBhdGgiOiIvd3MiLCJ0bHMiOiJ0bHMiLCJzbmkiOiJ2bS5leGFtcGxlLmNvbSJ9
+trojan://tr0jan%40pass@tj.example.com:443?security=tls&sni=tj.example.com&type=ws&path=%2Fws&host=cdn.example.com&allowInsecure=1#Trojan%20WS
+vless://aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee@vl.example.com:443?encryption=none&security=reality&sni=www.microsoft.com&fp=chrome&pbk=PUBKEY&sid=abcd&type=tcp&flow=xtls-rprx-vision#VLESS%20Reality

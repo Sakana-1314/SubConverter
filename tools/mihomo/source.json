@@ -1,0 +1,12 @@
+{
+  "releaseTag": "v1.19.33",
+  "assetName": "mihomo-windows-amd64-v1.19.33.zip",
+  "url": "https://github.com/MetaCubeX/mihomo/releases/download/v1.19.33/mihomo-windows-amd64-v1.19.33.zip",
+  "assetSize": 22512121,
+  "downloadedBytes": 22512121,
+  "sha256": "6ab2180875f9f6fff8b19386d760daec257f66b45f72b3afc650634272fa837a",
+  "checksum": "official release publishes no SHA-256 checksum asset (only version.txt)",
+  "downloadMethod": "curl from official MetaCubeX/mihomo GitHub release",
+  "downloadedAt": "2026-11-09T15:17:30.388Z",
+  "exePath": "tools/mihomo/mihomo.exe"
+}
