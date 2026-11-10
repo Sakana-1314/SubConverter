@@ -49,7 +49,7 @@ import { BUILTIN_TARGETS } from '../src/types';
 // ---------------------------------------------------------------------------
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const E2E_DIR = join(ROOT, 'fixtures', 'e2e');
+const E2E_DIR = join(ROOT, 'tests', 'fixtures', 'e2e');
 const OUT_DIR = join(ROOT, 'out');
 const TOOLS_DIR = join(ROOT, 'tools');
 const MIHOMO_DIR = join(TOOLS_DIR, 'mihomo');
@@ -858,8 +858,8 @@ function writeReports(mihomoOutcome, fatalError) {
   lines.push('- lines 1..20674: `DOMAIN,x<N>.example.com` (20,674 legal rules)');
   lines.push('- line 20675 (0-based 20674): `DOMA,example.com`');
   lines.push('- line 20676 (0-based 20675): `DOMA`, with no final newline (truncated tail)');
-  lines.push('- `fixtures/e2e/rules-bom-crlf.txt`: UTF-8 BOM + CRLF rules');
-  lines.push('- `fixtures/e2e/error-page.html`: HTML error page, must fail the source only');
+  lines.push('- `tests/fixtures/e2e/rules-bom-crlf.txt`: UTF-8 BOM + CRLF rules');
+  lines.push('- `tests/fixtures/e2e/error-page.html`: HTML error page, must fail the source only');
   lines.push('');
   lines.push('## Conversion');
   lines.push('');
@@ -958,27 +958,27 @@ async function main() {
 
   runInfo.fixtures = [
     {
-      path: 'fixtures/e2e/subscription.txt',
+      path: 'tests/fixtures/e2e/subscription.txt',
       size: fileSize(subscriptionPath),
       shape: `base64 of ${subscriptionPlain.length}-char URI list; ${uriLines.length} supported URIs + 1 bad hysteria2 link; decoded ${Buffer.byteLength(subscriptionPlain)} B`,
     },
     {
-      path: 'fixtures/e2e/rules-big.txt',
+      path: 'tests/fixtures/e2e/rules-big.txt',
       size: fileSize(bigRulesPath),
       shape: `${bigLines.length} lines; 20,674 legal DOMAIN rules; line 20675=DOMA,example.com; line 20676=DOMA (no final newline)`,
     },
     {
-      path: 'fixtures/e2e/rules-bom-crlf.txt',
+      path: 'tests/fixtures/e2e/rules-bom-crlf.txt',
       size: fileSize(bomCrlfPath),
       shape: `BOM=${bomCrlfText.startsWith('\uFEFF')}; CRLF=${bomCrlfText.includes('\r\n')}; 2 typed rules`,
     },
     {
-      path: 'fixtures/e2e/error-page.html',
+      path: 'tests/fixtures/e2e/error-page.html',
       size: fileSize(errorPagePath),
       shape: 'HTML error page served as text/html',
     },
     {
-      path: 'fixtures/e2e/acl4ssr.ini',
+      path: 'tests/fixtures/e2e/acl4ssr.ini',
       size: fileSize(iniPath),
       shape: 'ACL4SSR subset: 4 custom_proxy_group + 3 inline ruleset + rename + clash_rule_base',
     },

@@ -8,9 +8,9 @@ import {
   normalizeNewlines,
   stripBom,
 } from '../../../src/rules/dialects';
-import clashPayloadFixture from '../../../test/fixtures/rules/clash-payload.yaml?raw';
-import domainListFixture from '../../../test/fixtures/rules/domain-list.txt?raw';
-import surgeFixture from '../../../test/fixtures/rules/surge.list?raw';
+import clashPayloadFixture from '../../fixtures/rules/clash-payload.yaml?raw';
+import domainListFixture from '../../fixtures/rules/domain-list.txt?raw';
+import surgeFixture from '../../fixtures/rules/surge.list?raw';
 
 function base64Url(text: string): string {
   return btoa(text).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');

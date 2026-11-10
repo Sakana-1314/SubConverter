@@ -166,7 +166,7 @@
 
 ## 5. 文件清单（单文件单 owner）
 
-> 除特别说明外，路径相对于项目根。`# owner` 是唯一 owner。`test/fixtures/<owner>/` 为目录级归属，内部文件不得跨 owner 共享。
+> 除特别说明外，路径相对于项目根。`# owner` 是唯一 owner。`tests/fixtures/<owner>/` 为目录级归属，内部文件不得跨 owner 共享。
 > 现有 `docs/research/*.md` 是架构输入材料（只读证据，不参与实现）；`docs/SPEC.md`、`docs/ARCHITECTURE.md`、`docs/PARITY.md` 是架构产物。为满足“每个文件一个 owner”的记账要求，它们都归入 `integration`，但实现者不得修改 `docs/research/*`。
 
 ### 5.1 根与构建
@@ -253,49 +253,49 @@ src/integration/errors.ts            # integration
 ### 5.3 `test/`
 
 ```
-test/unit/links/**                   # links
-test/fixtures/links/**               # links
-test/unit/rules/**                   # rules
-test/fixtures/rules/**               # rules
-test/unit/emitter/**                 # emitter
-test/fixtures/emitter/**             # emitter
-test/integration/**                  # integration
-test/fixtures/integration/**         # integration
+tests/unit/links/**                   # links
+tests/fixtures/links/**               # links
+tests/unit/rules/**                   # rules
+tests/fixtures/rules/**               # rules
+tests/unit/emitter/**                 # emitter
+tests/fixtures/emitter/**             # emitter
+tests/integration/**                  # integration
+tests/fixtures/integration/**         # integration
 ```
 
 具体测试文件（全部落在上述目录内）：
 
 | 文件 | owner |
 |---|---|
-| `test/unit/links/base64.test.ts` | links |
-| `test/unit/links/ip.test.ts` | links |
-| `test/unit/links/url-guard.test.ts` | links |
-| `test/unit/links/fetch.test.ts` | links |
-| `test/unit/links/uri.test.ts` | links |
-| `test/unit/links/clash-input.test.ts` | links |
-| `test/unit/links/subscription.test.ts` | links |
-| `test/unit/links/name-allocator.test.ts` | links |
-| `test/unit/rules/registry.test.ts` | rules |
-| `test/unit/rules/payload.test.ts` | rules |
-| `test/unit/rules/dialects.test.ts` | rules |
-| `test/unit/rules/truncation.test.ts` | rules |
-| `test/unit/rules/groups.test.ts` | rules |
-| `test/unit/rules/ini.test.ts` | rules |
-| `test/unit/rules/validate.test.ts` | rules |
-| `test/unit/rules/doma-regression.test.ts` | rules |
-| `test/unit/rules/fuzz.test.ts` | rules |
-| `test/unit/emitter/nodes.test.ts` | emitter |
-| `test/unit/emitter/groups.test.ts` | emitter |
-| `test/unit/emitter/rules.test.ts` | emitter |
-| `test/unit/emitter/template.test.ts` | emitter |
-| `test/unit/emitter/golden.test.ts` | emitter |
-| `test/unit/emitter/invariants.test.ts` | emitter |
-| `test/integration/router.test.ts` | integration |
-| `test/integration/sub.test.ts` | integration |
-| `test/integration/ruleset.test.ts` | integration |
-| `test/integration/security.test.ts` | integration |
-| `test/integration/provider-cache.test.ts` | integration |
-| `test/integration/e2e.test.ts` | integration |
+| `tests/unit/links/base64.test.ts` | links |
+| `tests/unit/links/ip.test.ts` | links |
+| `tests/unit/links/url-guard.test.ts` | links |
+| `tests/unit/links/fetch.test.ts` | links |
+| `tests/unit/links/uri.test.ts` | links |
+| `tests/unit/links/clash-input.test.ts` | links |
+| `tests/unit/links/subscription.test.ts` | links |
+| `tests/unit/links/name-allocator.test.ts` | links |
+| `tests/unit/rules/registry.test.ts` | rules |
+| `tests/unit/rules/payload.test.ts` | rules |
+| `tests/unit/rules/dialects.test.ts` | rules |
+| `tests/unit/rules/truncation.test.ts` | rules |
+| `tests/unit/rules/groups.test.ts` | rules |
+| `tests/unit/rules/ini.test.ts` | rules |
+| `tests/unit/rules/validate.test.ts` | rules |
+| `tests/unit/rules/doma-regression.test.ts` | rules |
+| `tests/unit/rules/fuzz.test.ts` | rules |
+| `tests/unit/emitter/nodes.test.ts` | emitter |
+| `tests/unit/emitter/groups.test.ts` | emitter |
+| `tests/unit/emitter/rules.test.ts` | emitter |
+| `tests/unit/emitter/template.test.ts` | emitter |
+| `tests/unit/emitter/golden.test.ts` | emitter |
+| `tests/unit/emitter/invariants.test.ts` | emitter |
+| `tests/integration/router.test.ts` | integration |
+| `tests/integration/sub.test.ts` | integration |
+| `tests/integration/ruleset.test.ts` | integration |
+| `tests/integration/security.test.ts` | integration |
+| `tests/integration/provider-cache.test.ts` | integration |
+| `tests/integration/e2e.test.ts` | integration |
 
 ### 5.4 归属强制
 
@@ -887,7 +887,7 @@ export function assembleConfig(input: AssembleInput): { yaml: string; warnings: 
 - 合并顺序：模板允许键 → `proxies` → `proxy-groups` → `rule-providers` → `rules`。
 - 读回校验（评审 P0-2）：`proxies`/`proxy-groups`/`rules` 类型；**对每条 rules 字符串重新调用 `rules.parseRuleLine`（mode='template'，knownTargets/knownProviders 全量，strict=true）**；任何 `E_*` → `E_EMIT_INVALID`。`DOMAIN,,PROXY`、缺 target、坏 CIDR、括号不平衡的 `AND` 都在此被拒绝。
 - 额外独立不变量：恰好一条末尾 MATCH；无空 target/payload；无 `DOMA`/`NaN`/null 端口；端口/CIDR/逻辑括号合法；最终换行。
-- `test/unit/emitter/invariants.test.ts` + `test/unit/rules/fuzz.test.ts` 做 seeded 属性测试；发布门禁另跑真实 mihomo `-t`（AC-24）。
+- `tests/unit/emitter/invariants.test.ts` + `tests/unit/rules/fuzz.test.ts` 做 seeded 属性测试；发布门禁另跑真实 mihomo `-t`（AC-24）。
 - 读回失败 → 抛 `E_EMIT_INVALID`（integration 返回 500）。
 - 统计 `bytesOut`。
 
@@ -1110,13 +1110,13 @@ parser/validator ──Warning──▶ WarningCollector ──▶ headers + dia
 
 ### 10.1 单元（Node + Vitest）
 
-- 环境：Node 24，`vitest.config.ts`，`environment: 'node'`，只跑 `test/unit/**`。
+- 环境：Node 24，`vitest.config.ts`，`environment: 'node'`，只跑 `tests/unit/**`。
 - 覆盖：
   - `links`：base64 严格性、IP/CIDR、URL guard 表驱动、fetch 假实现（重定向/超时/大小/HTML）、五协议 URI、Clash YAML 输入、名称分配。
   - `rules`：37 类型 × 合法/非法 payload、拆分规则、别名、逻辑递归、截断、provider 判定、组 DSL、INI。
   - `emitter`：字段映射、组字段、规则引号、模板清洗、golden YAML、读回。
 - 不访问网络；`fetcher` 通过 `deps.fetch` 注入。
-- `test/unit/rules/doma-regression.test.ts` 必须包含 20,675 条规则 + 第 20,675 条 `DOMA` 的用例（AC-06）。
+- `tests/unit/rules/doma-regression.test.ts` 必须包含 20,675 条规则 + 第 20,675 条 `DOMA` 的用例（AC-06）。
 
 ### 10.2 集成（workerd + `@cloudflare/vitest-plugin`）
 
@@ -1128,7 +1128,7 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   plugins: [cloudflareTest({ wrangler: { configPath: './wrangler.jsonc' } })],
-  test: { include: ['test/integration/**/*.test.ts'] },
+  test: { include: ['tests/integration/**/*.test.ts'] },
 });
 ```
 
@@ -1140,7 +1140,7 @@ export default defineConfig({
 ### 10.3 E2E 验收脚本
 
 - `scripts/e2e-acceptance.ts`，Node 24 直接运行（type stripping），只依赖内置模块：
-  1. 启动本地 fixture HTTP server（`127.0.0.1:8790`），提供 `test/fixtures/rules/doma-20675.txt` 等大文件；再启动 `npx wrangler dev --config wrangler.test.jsonc --local --port <port> --ip 127.0.0.1`（`child_process.spawn`）。`wrangler.test.jsonc` 复用生产配置但**去掉 `global_fetch_strictly_public`**（否则本地 fixture 可能被平台层阻断），并设置 `ENVIRONMENT=test`、`ALLOW_HTTP_UPSTREAM=true`、`UPSTREAM_ALLOWED_PORTS=80,443,8790`、`ALLOW_TEST_UPSTREAM_HOSTS=127.0.0.1:8790`。
+  1. 启动本地 fixture HTTP server（`127.0.0.1:8790`），提供 `tests/fixtures/rules/doma-20675.txt` 等大文件；再启动 `npx wrangler dev --config wrangler.test.jsonc --local --port <port> --ip 127.0.0.1`（`child_process.spawn`）。`wrangler.test.jsonc` 复用生产配置但**去掉 `global_fetch_strictly_public`**（否则本地 fixture 可能被平台层阻断），并设置 `ENVIRONMENT=test`、`ALLOW_HTTP_UPSTREAM=true`、`UPSTREAM_ALLOWED_PORTS=80,443,8790`、`ALLOW_TEST_UPSTREAM_HOSTS=127.0.0.1:8790`。
   2. 轮询 `/version` 直到 ready（超时 60s）。
   3. 用 `fetch` 发请求，断言 §11 AC-06/07/08/09/13/14/15/16/19/21/22/29/31/32/33 等。大规则源走 fixture server，不塞 inline。
   4. 终止子进程与 fixture server；失败时打印响应体摘要（不含 token）。
@@ -1196,7 +1196,7 @@ export default defineConfig({
 3. `links/uri/<kind>.ts`：实现 URI 解析；在 `uri/index.ts` 注册 scheme。
 4. `links/clash-input.ts`：增加 Clash YAML 字段映射。
 5. `emitter/nodes.ts`：增加 mihomo 字段映射。
-6. 测试：`test/unit/links/uri.test.ts`、`clash-input.test.ts`、`test/unit/emitter/nodes.test.ts`。
+6. 测试：`tests/unit/links/uri.test.ts`、`clash-input.test.ts`、`tests/unit/emitter/nodes.test.ts`。
 
 ### 12.2 新增规则类型
 
@@ -1276,8 +1276,8 @@ v1 不计划。若未来支持 sing-box/Surge：新增 `emitter/<target>.ts` 与
 
 | # | 评审问题 | 处理 | 落点/验收 |
 |---|---|---|---|
-| P0-1 | AC-06 用 `ruleset=GROUP,inline:...` 喂 20,675 行不可执行：inline 上限 8,192 解码字节/4,096 source 字符/16 KiB URL；评审实测 3 字段 `DOMAIN,xN,G` 为 319,678 B → 426,238 base64url 字符（104x/52x/26x） | 拆分：规则语义用单元 `buildRules` 直接测 20,675 行；HTTP 端到端用本地 fixture server `127.0.0.1:8790` 提供 `test/fixtures/rules/doma-20675.txt`（2 字段 `DOMAIN,xN` 行，278,330 B / 371,107 base64url，仍远超 inline）；新增仅测试的 `ENVIRONMENT=test` + `UPSTREAM_ALLOWED_PORTS=80,443,8790` + `ALLOW_TEST_UPSTREAM_HOSTS=127.0.0.1:8790`（生产忽略/默认空）；inline 上限明确为 8,192 解码字节、12,000 source 字符、远程 4,096；新增 AC-32 边界测试 | SPEC §2.5/§9.2/§9.4/AC-06/AC-32；ARCHITECTURE §2.1/§2.2；本 ask 用 Node 复核：3 字段 `rule_file_bytes 319678`/`base64url_chars 426238`，2 字段 `278330`/`371107`；`8192 -> 10923 chars`、`16384 -> 21846 chars` |
-| P0-2 | “绝不输出非法规则”未被验收证明：AC-24 可选、readback 只做“逗号+前缀”快检、无 fuzz/property/differential | readback 改为对每条输出规则重新调用 `rules.parseRuleLine`（mode=template，全量 targets/providers，strict）；新增独立不变量；新增 seeded fuzz/property（`test/unit/rules/fuzz.test.ts`、`test/unit/emitter/invariants.test.ts`，≥10,000 组合法/非法样例）；新增 `npm run test:mihomo` 为**发布必过**门禁（未设置 `MIHOMO_BIN` 非零退出）；AC-24b 明确 E2E SKIP 不计 pass；措辞从“绝不”改为“设计上不输出 + 发布门禁独立验证” | SPEC §6.3/AC-24/AC-24b/AC-28/AC-34；ARCHITECTURE §7.3.7/§10.3/§15 |
+| P0-1 | AC-06 用 `ruleset=GROUP,inline:...` 喂 20,675 行不可执行：inline 上限 8,192 解码字节/4,096 source 字符/16 KiB URL；评审实测 3 字段 `DOMAIN,xN,G` 为 319,678 B → 426,238 base64url 字符（104x/52x/26x） | 拆分：规则语义用单元 `buildRules` 直接测 20,675 行；HTTP 端到端用本地 fixture server `127.0.0.1:8790` 提供 `tests/fixtures/rules/doma-20675.txt`（2 字段 `DOMAIN,xN` 行，278,330 B / 371,107 base64url，仍远超 inline）；新增仅测试的 `ENVIRONMENT=test` + `UPSTREAM_ALLOWED_PORTS=80,443,8790` + `ALLOW_TEST_UPSTREAM_HOSTS=127.0.0.1:8790`（生产忽略/默认空）；inline 上限明确为 8,192 解码字节、12,000 source 字符、远程 4,096；新增 AC-32 边界测试 | SPEC §2.5/§9.2/§9.4/AC-06/AC-32；ARCHITECTURE §2.1/§2.2；本 ask 用 Node 复核：3 字段 `rule_file_bytes 319678`/`base64url_chars 426238`，2 字段 `278330`/`371107`；`8192 -> 10923 chars`、`16384 -> 21846 chars` |
+| P0-2 | “绝不输出非法规则”未被验收证明：AC-24 可选、readback 只做“逗号+前缀”快检、无 fuzz/property/differential | readback 改为对每条输出规则重新调用 `rules.parseRuleLine`（mode=template，全量 targets/providers，strict）；新增独立不变量；新增 seeded fuzz/property（`tests/unit/rules/fuzz.test.ts`、`tests/unit/emitter/invariants.test.ts`，≥10,000 组合法/非法样例）；新增 `npm run test:mihomo` 为**发布必过**门禁（未设置 `MIHOMO_BIN` 非零退出）；AC-24b 明确 E2E SKIP 不计 pass；措辞从“绝不”改为“设计上不输出 + 发布门禁独立验证” | SPEC §6.3/AC-24/AC-24b/AC-28/AC-34；ARCHITECTURE §7.3.7/§10.3/§15 |
 | P0-3 | AC-07 的 template 半不可实现：`checkTail(lines,...)` 拿不到原始文本/最终换行；模板规则来自已解析 YAML；AC-07 还缺 `url` | `checkTail` 改为 `{rawText, lines, hadFinalNewline, dialect, sourceId}`；新增 `checkTemplateTail(rawText, sourceId)` 在 YAML 解析前检查；AC-07 补 `url=inline:<small node sub>`，ruleset 与 template 两个子用例均给可执行输入 | SPEC §6.2/AC-07；ARCHITECTURE §7.2.7 |
 | P0-4 | `clash-classic` vs `clash-classical`：tindy 文档写 `clash-classic`，SPEC 只接受 `clash-classical`，迁移指南会 400 | `clash-classic` 作为别名接受并产生 `W_DIALECT_ALIAS`；规范化后同解析器；`quanx:` 显式 `W_DIALECT_UNSUPPORTED` + `invalid_source`；AC-31 覆盖两种拼写与 `quanx:` | SPEC §4.1/§4.3/§10.2/AC-31；ARCHITECTURE §7.2.6 |
 | P0-5 | 规则集来源的 comma-bearing 类型会把 `,GROUP` 留在 payload，重新引入 P5 破坏 | 规则集来源重组 payload 前，若最后一个逗号字段等于 wrapper/已知 target/内置目标，先剥离并 `W_RULE_SOURCE_TARGET_IGNORED`；新增 `W_RULE_SOURCE_TARGET_AMBIGUOUS`（疑似 target 但未知，保留 payload 并警告）；AC-10/AC-13 覆盖 `DOMAIN-REGEX,^a{1,3}$,G` 与 `AND,(...),G` 的 Surge/classical 源 | SPEC §4.3/§5.3/§10.2；ARCHITECTURE §7.2.4/§7.2.5 |
@@ -1288,11 +1288,11 @@ v1 不计划。若未来支持 sing-box/Surge：新增 `emitter/<target>.ts` 与
 
 ### 16.2 新增/调整的测试与文件
 
-- 新增 `test/unit/rules/fuzz.test.ts`（rules）：seeded 规则生成器 + 输出不变量；≥10,000 组合法/非法输入。
-- 新增 `test/unit/emitter/invariants.test.ts`（emitter）：**不 import `rules/parse`**，用测试内独立的最小行解析器检查 emitter 输出（类型/字段数/target/括号/CIDR/端口/末尾 MATCH）；并注入 `DOMAIN,,PROXY`、不平衡 `AND`、坏 CIDR、缺 target 验证 `E_EMIT_INVALID`。独立客户端证据仍以 AC-24 的真实 mihomo `-t` 为准。
-- 新增 `test/integration/provider-cache.test.ts`（integration）：两 host 的 provider URL/缓存头测试。
+- 新增 `tests/unit/rules/fuzz.test.ts`（rules）：seeded 规则生成器 + 输出不变量；≥10,000 组合法/非法输入。
+- 新增 `tests/unit/emitter/invariants.test.ts`（emitter）：**不 import `rules/parse`**，用测试内独立的最小行解析器检查 emitter 输出（类型/字段数/target/括号/CIDR/端口/末尾 MATCH）；并注入 `DOMAIN,,PROXY`、不平衡 `AND`、坏 CIDR、缺 target 验证 `E_EMIT_INVALID`。独立客户端证据仍以 AC-24 的真实 mihomo `-t` 为准。
+- 新增 `tests/integration/provider-cache.test.ts`（integration）：两 host 的 provider URL/缓存头测试。
 - 新增 `wrangler.test.jsonc`（integration）：E2E 专用，去掉 `global_fetch_strictly_public`，设置测试 vars；生产 `wrangler.jsonc` 不变。
-- `test/fixtures/rules/doma-20675.txt` 同时供单元与 E2E fixture server 使用。
+- `tests/fixtures/rules/doma-20675.txt` 同时供单元与 E2E fixture server 使用。
 - `scripts/e2e-acceptance.ts` 增加 `--require-mihomo`；`package.json` 增加 `test:mihomo`。
 - 以上文件均已在 `layout`/`modules`/`ownership.json` 中登记；没有跨 owner 文件。
 

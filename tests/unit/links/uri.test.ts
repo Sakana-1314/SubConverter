@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 
 import { describe, expect, it } from 'vitest';
-import urisFixture from '../../../fixtures/links/uris.txt?raw';
+import urisFixture from '../../fixtures/links/uris.txt?raw';
 import { encodeBase64, encodeBase64Url } from '../../../src/links/base64';
 import { parseUri } from '../../../src/links/uri';
 import type { UriParseResult } from '../../../src/links/contracts';

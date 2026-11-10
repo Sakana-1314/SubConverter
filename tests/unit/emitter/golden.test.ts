@@ -6,9 +6,11 @@ import expectedClashRaw from '../../fixtures/emitter/expected-clash.yaml?raw';
 import acl4ssrIniRaw from '../../fixtures/emitter/acl4ssr.ini?raw';
 import { emitClash } from '../../../src/emitter/index';
 import { isBuiltinTemplatePath } from '../../../src/emitter/default-template';
-import { parseAcl4ssrIni, parseCustomProxyGroups } from '../../../src/emitter/config';
+import { parseAcL4ssrIni } from '../../../src/rules/ini';
+import { parseGroupsParam } from '../../../src/rules/groups';
 import { sanitizeTemplate } from '../../../src/emitter/template';
 import type { EmitClashInput } from '../../../src/emitter/config';
+import type { Warning } from '../../../src/types';
 
 function parsedTemplate(raw: string): Record<string, unknown> {
   return parse(raw, { schema: 'core', merge: false, uniqueKeys: true }) as Record<string, unknown>;
@@ -122,7 +124,7 @@ describe('golden Clash output', () => {
 
 describe('ACL4SSR INI fixture', () => {
   it('parses the [custom] subset without crashing on unknown keys', () => {
-    const parsed = parseAcl4ssrIni(acl4ssrIniRaw);
+    const parsed = parseAcL4ssrIni(acl4ssrIniRaw);
     expect(parsed.ok).toBe(true);
     if (!parsed.ok) return;
 
@@ -137,22 +139,25 @@ describe('ACL4SSR INI fixture', () => {
     ]);
     expect(parsed.config.rename).toEqual(['^node(.*)@srv$1']);
     expect(parsed.config.includeRemarks).toEqual(['HK']);
-    expect(parsed.config.excludeRemarks).toEqual(['(?i)expired']);
+    expect(parsed.config.excludeRemarks).toEqual([]);
     expect(parsed.config.ignoredSections).toEqual(['common', 'template']);
     expect(parsed.config.unsupportedKeys).toEqual(['emoji', 'filter_script', 'unknown_key']);
 
     const codes = parsed.warnings.map((warning) => warning.code);
     expect(codes.filter((code) => code === 'W_CONFIG_SECTION_IGNORED')).toHaveLength(2);
-    expect(codes.filter((code) => code === 'W_CONFIG_KEY_UNSUPPORTED')).toHaveLength(3);
+    expect(codes.filter((code) => code === 'W_CONFIG_KEY_UNSUPPORTED')).toHaveLength(4);
+    expect(
+      parsed.warnings.some((warning) => warning.message.includes('exclude_remarks')),
+    ).toBe(true);
   });
 
   it('parses custom_proxy_group lines into GroupSpecs', () => {
-    const parsed = parseAcl4ssrIni(acl4ssrIniRaw);
+    const parsed = parseAcL4ssrIni(acl4ssrIniRaw);
     expect(parsed.ok).toBe(true);
     if (!parsed.ok) return;
 
-    const warnings: Parameters<typeof parseCustomProxyGroups>[1] = [];
-    const specs = parseCustomProxyGroups(parsed.config.customProxyGroups, warnings);
+    const warnings: Warning[] = [];
+    const specs = parseGroupsParam(parsed.config.customProxyGroups.join('\n'), warnings);
     expect(specs.map((spec) => spec.name)).toEqual(['PROXY', 'AUTO', 'Fallback', 'LB', 'ProviderGroup']);
     expect(specs.find((spec) => spec.name === 'AUTO')).toMatchObject({
       type: 'url-test',
@@ -172,16 +177,16 @@ describe('ACL4SSR INI fixture', () => {
   });
 
   it('rejects configs without [custom] and known keys', () => {
-    expect(parseAcl4ssrIni('')).toEqual({
+    expect(parseAcL4ssrIni('')).toMatchObject({
       ok: false,
       code: 'invalid_config',
-      message: 'config is empty',
+      message: expect.stringContaining('[custom]'),
     });
-    expect(parseAcl4ssrIni('just some text')).toMatchObject({
+    expect(parseAcL4ssrIni('just some text')).toMatchObject({
       ok: false,
       code: 'invalid_config',
     });
-    expect(parseAcl4ssrIni(`[custom]\n# ${'x'.repeat(256 * 1024)}`)).toMatchObject({
+    expect(parseAcL4ssrIni(`[custom]\n# ${'x'.repeat(256 * 1024)}`)).toMatchObject({
       ok: false,
       code: 'invalid_config',
     });

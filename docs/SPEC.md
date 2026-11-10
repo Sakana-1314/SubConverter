@@ -1025,7 +1025,7 @@ interface Warning {
 | AC-03 | 单元测试 | `npm run test:unit` | 全部通过；覆盖 links/rules/emitter 的矩阵 |
 | AC-04 | 集成测试 | `npm run test:integration` | 在 workerd 中全部通过；路由/CORS/错误码 |
 | AC-05 | 打包校验（生产/测试双配置） | `npx wrangler deploy --dry-run --outdir dist` 与 `npx wrangler deploy --dry-run --config wrangler.test.jsonc --outdir dist-test` | 均退出 0；无 KV 绑定；bundle < 5 MiB；生产配置含 `global_fetch_strictly_public`，测试配置不含 |
-| AC-06 | 20,675 条规则 + 第 20675 条 `DOMA`（规则语义 + HTTP 端到端） | 单元 `test/unit/rules/doma-regression.test.ts` 直接调 `buildRules`；E2E 由 `scripts/e2e-acceptance.ts` 启动 `127.0.0.1:8790` fixture server 提供 `test/fixtures/rules/doma-20675.txt`（使用 2 字段 `DOMAIN,xN` 行 + 末尾 `DOMA`，278,330 B，371,107 base64url 字符，远超 inline 上限），并用 `wrangler dev --config wrangler.test.jsonc`（`ENVIRONMENT=test`、`ALLOW_HTTP_UPSTREAM=true`、`UPSTREAM_ALLOWED_PORTS=80,443,8790`、`ALLOW_TEST_UPSTREAM_HOSTS=127.0.0.1:8790`，无 `global_fetch_strictly_public`），请求 `url=inline:<small node sub>&ruleset=GROUP,http://127.0.0.1:8790/doma-20675.txt` | 单元断言通过；E2E 200；输出无 `- DOMA`、无未知类型；20,674 条合法规则 + 1 条最终 MATCH；Warning 含 `E_RULE_NO_TARGET` 且 `line=20675`（可同时含 `E_TRUNCATED_TAIL`）；YAML 读回 + 全量规则重校验通过 |
+| AC-06 | 20,675 条规则 + 第 20675 条 `DOMA`（规则语义 + HTTP 端到端） | 单元 `tests/unit/rules/doma-regression.test.ts` 直接调 `buildRules`；E2E 由 `scripts/e2e-acceptance.ts` 启动 `127.0.0.1:8790` fixture server 提供 `tests/fixtures/rules/doma-20675.txt`（使用 2 字段 `DOMAIN,xN` 行 + 末尾 `DOMA`，278,330 B，371,107 base64url 字符，远超 inline 上限），并用 `wrangler dev --config wrangler.test.jsonc`（`ENVIRONMENT=test`、`ALLOW_HTTP_UPSTREAM=true`、`UPSTREAM_ALLOWED_PORTS=80,443,8790`、`ALLOW_TEST_UPSTREAM_HOSTS=127.0.0.1:8790`，无 `global_fetch_strictly_public`），请求 `url=inline:<small node sub>&ruleset=GROUP,http://127.0.0.1:8790/doma-20675.txt` | 单元断言通过；E2E 200；输出无 `- DOMA`、无未知类型；20,674 条合法规则 + 1 条最终 MATCH；Warning 含 `E_RULE_NO_TARGET` 且 `line=20675`（可同时含 `E_TRUNCATED_TAIL`）；YAML 读回 + 全量规则重校验通过 |
 | AC-07 | 尾部截断 `- DOMA`（ruleset + template） | `url=inline:<small node sub>`；`ruleset=GROUP,inline:<b64 of 2 good lines + DOMA without final newline>`；`template=inline:<b64 of valid template + "- DOMA" without final newline>`（两者均 < 8,192 解码字节） | 行被丢弃；Warning 含 `E_TRUNCATED_TAIL`（stage=`rules`/`template`）；其余规则保留；模板规则默认丢弃；不得 400 |
 | AC-08 | 五协议输入 | Base64 订阅含 ss/ssr/vmess/trojan/vless 各 1 条 | 200；5 个 proxies；字段/端口/名称正确；无 Warning |
 | AC-09 | 单条坏数据隔离 | 5 条好 URI + 1 条坏 URI | 200；5 个节点；1 条 `E_NODE_*`；其余节点完整 |
@@ -1048,13 +1048,13 @@ interface Warning {
 | AC-25 | 文件归属 | `npm run check:ownership` | 每个文件恰好一个 owner；无未归属/重复归属 |
 | AC-26 | 安全字符串 | `include=(a+)+$`、`rename=(a+)+$@x` | 400 `invalid_regex`（不安全正则拒绝） |
 | AC-27 | 项目门禁 | `npm test` | ownership + 单元 + 集成全部通过 |
-| AC-28 | 输出读回/属性测试 | `npm run test:unit` 执行 `test/unit/rules/fuzz.test.ts`、`test/unit/emitter/invariants.test.ts`；seed 固定，≥10,000 组合法/非法规则；向 emitter 注入 `DOMAIN,,PROXY`、不平衡 `AND`、坏 CIDR、缺 target | 任何非法输出必须被完整重校验拒绝（`E_EMIT_INVALID` 或测试失败）；合法输出 100% 可被 `rules.parseRuleLine` 重解析 |
-| AC-29 | providers 缓存跨 host | `test/integration/provider-cache.test.ts`：同一 path+query 用两个 hostname；分别测 `PUBLIC_ORIGIN` 空/非空 | 空：`Cache-Control: private, no-store` + `W_PROVIDER_ORIGIN_UNPINNED`；非空：public 缓存且两 host 的 provider URL 都指向 canonical `PUBLIC_ORIGIN` |
+| AC-28 | 输出读回/属性测试 | `npm run test:unit` 执行 `tests/unit/rules/fuzz.test.ts`、`tests/unit/emitter/invariants.test.ts`；seed 固定，≥10,000 组合法/非法规则；向 emitter 注入 `DOMAIN,,PROXY`、不平衡 `AND`、坏 CIDR、缺 target | 任何非法输出必须被完整重校验拒绝（`E_EMIT_INVALID` 或测试失败）；合法输出 100% 可被 `rules.parseRuleLine` 重解析 |
+| AC-29 | providers 缓存跨 host | `tests/integration/provider-cache.test.ts`：同一 path+query 用两个 hostname；分别测 `PUBLIC_ORIGIN` 空/非空 | 空：`Cache-Control: private, no-store` + `W_PROVIDER_ORIGIN_UNPINNED`；非空：public 缓存且两 host 的 provider URL 都指向 canonical `PUBLIC_ORIGIN` |
 | AC-30 | `clash_rule_base` 本地路径 | config 含 `clash_rule_base=base/all_base.tpl`；另一例 `clash_rule_base=./local/base.yaml` | 前者映射内置模板 + `W_BUILTIN_TEMPLATE_MAPPED`；后者 400 `invalid_template` 且 message 提示改用 inline/URL |
 | AC-31 | 方言别名/拒绝 | `ruleset=G,clash-classic:<source>`；`ruleset=G,quanx:<source>` | 前者正常解析 + `W_DIALECT_ALIAS`；后者 `invalid_source` + `W_DIALECT_UNSUPPORTED`，不误当 URL |
 | AC-32 | inline 边界 | 8,192 解码字节（10,930 source 字符）接受；8,193 解码字节拒绝；12,001 source 字符拒绝（source 字符上限 12,000）；16,384 解码字节（21,846 字符）拒绝；远程 4,097 字符拒绝 | 边界值按 §2.5/§9.4；错误为 `invalid_source`，不得触发 Workers URL 16 KiB 平台错误 |
 | AC-33 | 测试夹具隔离 | 生产模式下设置 `ALLOW_TEST_UPSTREAM_HOSTS=127.0.0.1:8790` 请求 `http://127.0.0.1:8790/`；测试模式下设置 `ENVIRONMENT=test`、`UPSTREAM_ALLOWED_PORTS=80,443,8790`，白名单精确匹配/不匹配各一例 | 生产模式仍 400 `blocked_upstream`；测试模式精确匹配才放行，不匹配仍拒绝 |
-| AC-34 | 独立输出不变量 | 对 AC-06/13/16/17 输出运行 `test/unit/emitter/invariants.test.ts` | 恰好一条末尾 MATCH；无空 target/payload；无 `DOMA`；端口/CIDR/逻辑括号合法；最后换行存在 |
+| AC-34 | 独立输出不变量 | 对 AC-06/13/16/17 输出运行 `tests/unit/emitter/invariants.test.ts` | 恰好一条末尾 MATCH；无空 target/payload；无 `DOMA`；端口/CIDR/逻辑括号合法；最后换行存在 |
 
 ### 11.1 测试命令
 

@@ -14,21 +14,12 @@ export type {
   AssembleResult,
   EmitClashInput,
   EmitClashOptions,
-  IniParseFailure,
-  IniParseResult,
-  IniParseSuccess,
   RuleValidator,
   RuleValidatorContext,
   RuleValidatorResult,
 } from './config';
 
-export {
-  assembleConfig,
-  parseAcl4ssrIni,
-  parseCustomProxyGroupLine,
-  parseCustomProxyGroups,
-  parseGroupTimes,
-} from './config';
+export { assembleConfig } from './config';
 
 export {
   EmitterError,

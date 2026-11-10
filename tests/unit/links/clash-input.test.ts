@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 
 import { describe, expect, it } from 'vitest';
-import clashFixture from '../../../fixtures/links/clash-input.yaml?raw';
+import clashFixture from '../../fixtures/links/clash-input.yaml?raw';
 import { parseClashNodes } from '../../../src/links/clash-input';
 import type { ProxyNode } from '../../../src/links/contracts';
 import { parseYamlSingle } from '../../../src/links/yaml';
