@@ -3,13 +3,15 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Subscription converter for mihomo/Clash running on Cloudflare Workers",
+  "description": "Subscription converter for mihomo/Clash running on Cloudflare Workers and EdgeOne Pages",
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "build": "wrangler deploy --dry-run --outdir=dist",
+    "build:edgeone": "node scripts/build-edgeone.mjs",
+    "check:edgeone": "node scripts/check-edgeone.mjs",
     "acceptance": "tsx scripts/acceptance.ts"
   },
   "dependencies": {
@@ -17,12 +19,13 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20261109.1",
+    "esbuild": "^0.28.2",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vitest": "^5.1.0",
     "wrangler": "^4.158.0"
   },
   "engines": {
-    "node": ">=24"
+    "node": ">=22"
   }
 }
