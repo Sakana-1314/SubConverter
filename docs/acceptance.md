@@ -1,6 +1,6 @@
 # Acceptance report
 
-- Generated at: 2026-11-09T15:23:53.301Z
+- Generated at: 2026-11-10T00:20:04.170Z
 - Command: `npm.cmd run acceptance` (runs `tsx scripts/acceptance.ts`)
 - Platform: win32 x64; Node v24.21.0
 - Workspace: `C:\Users\admin\Documents\ZCode Projects\订阅转换`
@@ -11,19 +11,19 @@
 
 | Fixture | Size | Shape |
 |---|---:|---|
-| `fixtures/e2e/subscription.txt` | 1485 B | base64 of 1113-char URI list; 5 supported URIs + 1 bad hysteria2 link; decoded 1113 B |
-| `fixtures/e2e/rules-big.txt` | 526435 B | 20676 lines; 20,674 legal DOMAIN rules; line 20675=DOMA,example.com; line 20676=DOMA (no final newline) |
-| `fixtures/e2e/rules-bom-crlf.txt` | 59 B | BOM=true; CRLF=true; 2 typed rules |
-| `fixtures/e2e/error-page.html` | 202 B | HTML error page served as text/html |
-| `fixtures/e2e/acl4ssr.ini` | 644 B | ACL4SSR subset: 4 custom_proxy_group + 3 inline ruleset + rename + clash_rule_base |
+| `tests/fixtures/e2e/subscription.txt` | 1485 B | base64 of 1113-char URI list; 5 supported URIs + 1 bad hysteria2 link; decoded 1113 B |
+| `tests/fixtures/e2e/rules-big.txt` | 526435 B | 20676 lines; 20,674 legal DOMAIN rules; line 20675=DOMA,example.com; line 20676=DOMA (no final newline) |
+| `tests/fixtures/e2e/rules-bom-crlf.txt` | 59 B | BOM=true; CRLF=true; 2 typed rules |
+| `tests/fixtures/e2e/error-page.html` | 202 B | HTML error page served as text/html |
+| `tests/fixtures/e2e/acl4ssr.ini` | 644 B | ACL4SSR subset: 4 custom_proxy_group + 3 inline ruleset + rename + clash_rule_base |
 
 The 20k-rule fixture is intentionally oversized for `inline:` (526,435 B > 8,192 B decoded limit), so it is served by a loopback fixture server through the documented `ENVIRONMENT=test` / `ALLOW_TEST_UPSTREAM_HOSTS` escape hatch. Its layout is:
 
 - lines 1..20674: `DOMAIN,x<N>.example.com` (20,674 legal rules)
 - line 20675 (0-based 20674): `DOMA,example.com`
 - line 20676 (0-based 20675): `DOMA`, with no final newline (truncated tail)
-- `fixtures/e2e/rules-bom-crlf.txt`: UTF-8 BOM + CRLF rules
-- `fixtures/e2e/error-page.html`: HTML error page, must fail the source only
+- `tests/fixtures/e2e/rules-bom-crlf.txt`: UTF-8 BOM + CRLF rules
+- `tests/fixtures/e2e/error-page.html`: HTML error page, must fail the source only
 
 ## Conversion
 
@@ -39,7 +39,7 @@ The 20k-rule fixture is intentionally oversized for `inline:` (526,435 B > 8,192
 | # | Check | Result | Evidence |
 |---:|---|---|---|
 | 1 | `fixtures_shape` | PASS | subscription.txt (5 URIs + 1 bad), rules-big.txt (20,676 lines, 20,674 legal), BOM/CRLF, HTML, INI all match the documented shape |
-| 2 | `http_200_diagnostics_json` | PASS | status=200 content-type=application/json; charset=utf-8 diagnostics=true elapsedMs=424 |
+| 2 | `http_200_diagnostics_json` | PASS | status=200 content-type=application/json; charset=utf-8 diagnostics=true elapsedMs=550 |
 | 3 | `diagnostics_stats_match_output` | PASS | stats={"nodes":5,"groups":2,"rules":20677,"providers":0,"sources":1,"bytesIn":527978,"bytesOut":776547,"warnings":8,"warningCodes":["E_FETCH_HTML","E_NODE_SCHEME_UNSUPPORTED","E_RULE_NO_TARGET","E_RULE_UNKNOWN_TYPE","E_TRUNCATED_TAIL","W_DEFAULT_MATCH_ADDED","W_GROUP_DEFAULT_ADDED","W_INPUT_BASE64_DETECTED"]} warnings=8 |
 | 4 | `generated_yaml_parses` | PASS | yaml.parse OK; proxies/proxy-groups/rules arrays present |
 | 5 | `proxies_count_and_protocol_types` | PASS | 5 proxies: ss(SIP002), ssr, vmess, trojan, vless; fields verified (ss aes-256-gcm, ssr auth_chain_a/http_simple, vmess ws+tls, trojan ws, vless tcp+reality) |
@@ -82,10 +82,10 @@ The 20k-rule fixture is intentionally oversized for `inline:` (526,435 B > 8,192
 - stderr: empty (0 bytes)
 - stdout (tail):
 ```text
-time="2026-11-09T23:23:53.272632500+08:00" level=info msg="Start initial configuration in progress"
-time="2026-11-09T23:23:53.273160000+08:00" level=info msg="Geodata Loader mode: memconservative"
-time="2026-11-09T23:23:53.273160000+08:00" level=info msg="Geosite Matcher implementation: succinct"
-time="2026-11-09T23:23:53.288874400+08:00" level=info msg="Initial configuration complete, total time: 16ms"
+time="2026-11-10T08:20:04.138140500+08:00" level=info msg="Start initial configuration in progress"
+time="2026-11-10T08:20:04.138664800+08:00" level=info msg="Geodata Loader mode: memconservative"
+time="2026-11-10T08:20:04.138664800+08:00" level=info msg="Geosite Matcher implementation: succinct"
+time="2026-11-10T08:20:04.160663100+08:00" level=info msg="Initial configuration complete, total time: 22ms"
 configuration file C:\Users\admin\Documents\ZCode Projects\订阅转换\out\generated.yaml test is successful
 
 ```

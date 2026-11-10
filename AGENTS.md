@@ -9,11 +9,9 @@ SubConverter（订阅转换 Cloudflare Worker）。事实标准以代码与各�
 ## 目录
 
 - `src/` - Worker 源码（HTTP、订阅解析、规则校验、Clash 生成）
-- `tests/` - 单元与集成测试
-- `fixtures/e2e/` - 验收夹具
+- `tests/` - 单元、集成测试与夹具（`tests/fixtures/`）
 - `scripts/` - 本地验收脚本
 - `docs/` - SPEC / ARCHITECTURE / PARITY / research / REPORT
-- `test/` - 大型规则回归夹具
 - `.github/workflows/` - CI
 
 根目录只放 `AGENTS.md`、`README.md`、`LICENSE`（如添加）、`package.json`、`package-lock.json`、`tsconfig.json`、`wrangler.toml`、`vitest.config.ts`、`.gitignore`、`.editorconfig`；文档与脚本放进所属目录内部。

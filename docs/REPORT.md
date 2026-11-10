@@ -216,7 +216,7 @@ src/
 tests/
   unit/                     links / rules / emitter
   integration/              路由、fetch service、内存上限
-fixtures/e2e/               验收夹具（订阅、20k 规则、BOM/CRLF、HTML、INI）
+  fixtures/                 单元与验收夹具（links、rules、emitter、e2e）
 scripts/acceptance.ts       本地验收脚本
 docs/                       SPEC / ARCHITECTURE / PARITY / research / acceptance / 本报告
 tools/mihomo/               验收用 mihomo 二进制与 source.json
@@ -510,7 +510,7 @@ Test Files  27 passed (27)
 
 夹具与请求：
 
-- `fixtures/e2e/rules-big.txt`：526,435 B，20,676 行；前 20,674 行是合法 `DOMAIN,x<N>.example.com`；第 20,675 行 `DOMA,example.com`；第 20,676 行 `DOMA` 且无最终换行【`docs/acceptance.md:15`】。
+- `tests/fixtures/e2e/rules-big.txt`：526,435 B，20,676 行；前 20,674 行是合法 `DOMAIN,x<N>.example.com`；第 20,675 行 `DOMA,example.com`；第 20,676 行 `DOMA` 且无最终换行【`docs/acceptance.md:15`】。
 - 主请求：`/sub?url=inline:<5 协议订阅>&ruleset=GROUP,http://127.0.0.1:8790/rules-big.txt`；大文件超过 inline 8,192 字节上限，必须走 fixture server（`docs/acceptance.md:20`）。
 
 结果【实测·验收】：
@@ -540,7 +540,7 @@ Test Files  27 passed (27)
 
 INI 场景：
 
-- `fixtures/e2e/acl4ssr.ini`（644 B）：4 个 `custom_proxy_group`、3 个内联 ruleset、rename、`clash_rule_base`。
+- `tests/fixtures/e2e/acl4ssr.ini`（644 B）：4 个 `custom_proxy_group`、3 个内联 ruleset、rename、`clash_rule_base`。
 - `/sub` 返回 200；5 个节点（SS Node 被 rename）；组 `["PROXY","AUTO","Fallback","LB"]`；规则 4 条；`AUTO` 的 url-test 字段、`Fallback` 的 interval、`LB` 的 `!!TYPE=^SS$`、内置模板 `mixed-port=7890` 均验证；输出 YAML 读回通过【`docs/acceptance.md:59-68`】。
 
 ### 5.4 mihomo 客户端校验

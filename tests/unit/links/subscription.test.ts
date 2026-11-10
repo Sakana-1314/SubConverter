@@ -1,9 +1,9 @@
 /// <reference types="vite/client" />
 
 import { describe, expect, it } from 'vitest';
-import base64Fixture from '../../../fixtures/links/sub-base64.txt?raw';
-import clashFixture from '../../../fixtures/links/clash-input.yaml?raw';
-import plainFixture from '../../../fixtures/links/sub-plain.txt?raw';
+import base64Fixture from '../../fixtures/links/sub-base64.txt?raw';
+import clashFixture from '../../fixtures/links/clash-input.yaml?raw';
+import plainFixture from '../../fixtures/links/sub-plain.txt?raw';
 import { encodeBase64, encodeBase64Url } from '../../../src/links/base64';
 import { detectInput } from '../../../src/links/detect';
 import { parseSubscriptionText } from '../../../src/links/subscription';

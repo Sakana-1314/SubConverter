@@ -6,7 +6,7 @@
 
 - 用户真实订阅的本地副本：`.private/user-subscription/subscription.raw`（仅本地，`.gitignore` 排除）。结构：Clash YAML，46 个节点（`ss` 34、`vmess` 12）、128 个策略组、9,816 条规则；无 `DOMA`、无缺逗号行。
 - 公开模板：ACL4SSR `ACL4SSR_Online_Full_AdblockPlus.ini`，35 个远程 ruleset（本地保存副本共 96,345 条规则）。
-- 运行方式：`scripts/real-subscription-check.ts` 用本地 loopback 提供订阅/模板/ruleset，直接调用 Worker 入口 `handleRequest`；生成的 YAML 用 `yaml` 读回，再由 `tools/mihomo/mihomo.exe -t` 加载。**全程没有重新下载订阅 URL。**
+- 运行方式：本地私有验收脚本（只读 `.private/`，不随仓库提交）用 loopback 提供订阅/模板/ruleset，直接调用 Worker 入口 `handleRequest`；生成的 YAML 用 `yaml` 读回，再由 `tools/mihomo/mihomo.exe -t` 加载。**全程没有重新下载订阅 URL。**
 
 ## 2. 结果
 

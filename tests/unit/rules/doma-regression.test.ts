@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildRules, parseRuleLine, type ValidationContext } from '../../../src/rules/index';
-import domaFixture from '../../../test/fixtures/rules/doma-20675.txt?raw';
+import domaFixture from '../../fixtures/rules/doma-20675.txt?raw';
 
 function context(): ValidationContext {
   return {
